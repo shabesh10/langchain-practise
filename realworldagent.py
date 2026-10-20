@@ -79,14 +79,14 @@ Do your best on (1) and (2). If at any point you realize you cannot **verify** a
 your available tools and reasoning, do not fabricate numbers: use `null` for that field and spell out
 the limitation in `how_you_computed_counts`. If you encounter any errors please report what the error was and what the error message was."""
 
-print("Running create_agent...", flush=True)
-agent_result = agent.invoke(
-    {"messages": [{"role": "user", "content": content}]},
-    config={"configurable": {"thread_id": "great-gatsby-lc"}},
-)
+# print("Running create_agent...", flush=True)
+# agent_result = agent.invoke(
+#     {"messages": [{"role": "user", "content": content}]},
+#     config={"configurable": {"thread_id": "great-gatsby-lc"}},
+# )
 
-print("\ncreate_agent:")
-print(agent_result["messages"][-1].content_blocks)
+# print("\ncreate_agent:")
+# print(agent_result["messages"][-1].content_blocks)
 
 
 print("Running create_deep_agent...", flush=True)
