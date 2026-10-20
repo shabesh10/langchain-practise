@@ -6,6 +6,9 @@ from deepagents import create_deep_agent
 from langchain.chat_models import init_chat_model
 from langchain.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
+from dotenv import load_dotenv
+
+load_dotenv()
 
 SYSTEM_PROMPT = """You are a literary data assistant.
 
@@ -32,13 +35,18 @@ def fetch_text_from_url(url: str) -> str:
     return text
 
 
+# Local Qwen via llama.cpp:
+# model = init_chat_model(
+#     "Qwen",
+#     model_provider="openai",
+#     base_url="http://127.0.0.1:8080/v1",
+#     api_key="local",
+#     temperature=0.5,
+# )
+
 model = init_chat_model(
-    "openai/gpt-oss-120b",
-    model_provider="groq",
+    "google_genai:gemini-3.5-flash-lite",
     temperature=0.5,
-    timeout=600,
-    max_tokens=25000,
-    streaming=True,
 )
 
 checkpointer = InMemorySaver()
@@ -57,13 +65,13 @@ deep_agent = create_deep_agent(
     checkpointer=checkpointer,
 )
 
-content = f"""Project Gutenberg hosts a full plain-text copy of F. Scott Fitzgerald's The Great Gatsby.
-URL: https://www.gutenberg.org/files/64317/64317-0.txt
+content = f"""Project Gutenberg hosts a plain-text copy of O. Henry's The Gift of the Magi.
+URL: https://www.gutenberg.org/cache/epub/7256/pg7256.txt
 
 Answer as much as you can:
 
-1) How many lines in the complete Gutenberg file contain the substring `Gatsby` (count lines, not occurrences within a line, each line ends with a line break).
-2) The 1-based line number of the first line in the file that contains `Daisy`.
+1) How many lines in the complete Gutenberg file contain the substring `Della` (count lines, not occurrences within a line, each line ends with a line break).
+2) The 1-based line number of the first line in the file that contains `Jim`.
 3) A two-sentence neutral synopsis.
 
 Do your best on (1) and (2). If at any point you realize you cannot **verify** an exact answer with
@@ -75,11 +83,14 @@ agent_result = agent.invoke(
     {"messages": [{"role": "user", "content": content}]},
     config={"configurable": {"thread_id": "great-gatsby-lc"}},
 )
+
+
 print("Running create_deep_agent...", flush=True)
 deep_agent_result = deep_agent.invoke(
     {"messages": [{"role": "user", "content": content}]},
-    config={"configurable": {"thread_id": "great-gatsby-da"}},
+    config={"configurable": {"thread_id": "gift-of-the-magi-da"}},
 )
+
 print("\ncreate_agent:")
 print(agent_result["messages"][-1].content_blocks)
 print("\ncreate_deep_agent:")
