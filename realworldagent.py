@@ -10,20 +10,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+BOOK_URL = "https://www.gutenberg.org/cache/epub/7256/pg7256.txt"
+
 SYSTEM_PROMPT = """You are a literary data assistant.
 
 ## Capabilities
 
-- `fetch_text_from_url`: loads document text from a URL into the conversation.
+- `fetch_text_from_url`: loads the configured Project Gutenberg text. Call it without arguments.
 Do not guess line counts or positions—ground them in tool results from the saved file."""
 
 
 @tool
-def fetch_text_from_url(url: str) -> str:
-    """Fetch the document from a URL.
-    """
+def fetch_text_from_url() -> str:
+    """Fetch the configured Project Gutenberg text."""
     req = urllib.request.Request(
-        url,
+        BOOK_URL,
         headers={"User-Agent": "Mozilla/5.0 (compatible; quickstart-research/1.0)"},
     )
     try:
@@ -84,6 +85,9 @@ agent_result = agent.invoke(
     config={"configurable": {"thread_id": "great-gatsby-lc"}},
 )
 
+print("\ncreate_agent:")
+print(agent_result["messages"][-1].content_blocks)
+
 
 print("Running create_deep_agent...", flush=True)
 deep_agent_result = deep_agent.invoke(
@@ -91,7 +95,6 @@ deep_agent_result = deep_agent.invoke(
     config={"configurable": {"thread_id": "gift-of-the-magi-da"}},
 )
 
-print("\ncreate_agent:")
-print(agent_result["messages"][-1].content_blocks)
+
 print("\ncreate_deep_agent:")
 print(deep_agent_result["messages"][-1].content_blocks)
