@@ -33,8 +33,8 @@ def fetch_text_from_url(url: str) -> str:
 
 
 model = init_chat_model(
-    "gemini-3.1-pro-preview",
-    model_provider="google-genai",
+    "openai/gpt-oss-120b",
+    model_provider="groq",
     temperature=0.5,
     timeout=600,
     max_tokens=25000,
